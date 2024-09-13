@@ -1,18 +1,20 @@
 version: 2.1
 
 jobs:
+  # Define the build job
   build:
     docker:
       - image: cimg/python:3.11  # Use CircleCI's official Python Docker image
     steps:
-      - checkout
+      - checkout  # Check out the code from the repository
       - run:
           name: Install Dependencies
           command: |
-            python -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
+            python -m venv venv  # Create a virtual environment
+            . venv/bin/activate  # Activate the virtual environment
+            pip install -r requirements.txt  # Install dependencies
 
+  # Define the test job
   test:
     docker:
       - image: cimg/python:3.11
@@ -24,19 +26,20 @@ jobs:
             . venv/bin/activate
             python manage.py test
 
+  # Define the deploy job
   deploy:
-  docker:
-    - image: cimg/python:3.11
-  steps:
-    - run:
-        name: Build Docker Image
-        command: docker build -t django-app .
-    - run:
-        name: Run Docker Container
-        command: docker run -d -p 8000:8000 django-app
-
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - run:
+          name: Build Docker Image
+          command: docker build -t django-app .
+      - run:
+          name: Run Docker Container
+          command: docker run -d -p 8000:8000 django-app
 
 workflows:
+  # Define a workflow to run the jobs
   build_test_deploy:
     jobs:
       - build
