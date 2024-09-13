@@ -1,5 +1,4 @@
 version: 2.1
-
 jobs:
   build_test:
     docker:
@@ -16,21 +15,16 @@ jobs:
   deploy:
     docker:
       - image: cimg/python:3.11
-    steps:
+    steps:  
       - checkout
       - setup_remote_docker:
-          version: 20.10.7
-          docker_layer_caching: true
+          docker_layer_chaching: false
       - run:
           name: Build Docker Image
-          command: docker build -t django-app -t imranahmad786/django-app:latest .
-      - run:
-          name: Login to Docker Hub
-          command: echo $DOCKER_PASSWORD | docker login -u imranahmad786 --password-stdin
-      - run:
-          name: Push Docker Image
-          command: docker push imranahmad786/django-app:latest
-
+          command: |
+            docker build -t django-app -t imranahmad786/django-app:latest .
+            echo $DOCKER_PASSWORD | docker login -u imranahmad786 --password-stdin
+            docker push imranahmad786/django-app:latest 
 workflows:
   build_and_deploy:
     jobs:
